@@ -10,10 +10,12 @@ const container = database.container(process.env.COSMOS_CONTAINER_ID || "");
 // DELETE: Delete a transaction by its ID
 export async function DELETE(
   request: Request,
-  // --- THIS IS THE CORRECTED PART ---
-  { params }: { params: { id: string } }
+  // --- THIS IS THE ROBUST, CORRECTED SIGNATURE ---
+  context: { params: { id: string } }
 ) {
-  const { id } = params;
+  // Get the id from the context object
+  const id = context.params.id;
+
   try {
     // The partition key is the second argument for the delete operation
     await container.item(id, id).delete();
