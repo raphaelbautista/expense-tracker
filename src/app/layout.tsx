@@ -2,7 +2,6 @@
 import { ThemeProvider } from "@/context/ThemeContext";
 import type { Metadata } from "next";
 import { Poppins, Fira_Code } from "next/font/google"; // Import Fira_Code
-import Script from "next/script";
 import "./globals.css";
 
 // Configure both fonts

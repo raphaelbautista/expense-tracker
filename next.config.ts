@@ -6,9 +6,6 @@ const nextConfig = {
   },
   // Enable standalone mode for Azure Static Web Apps
   output: 'standalone',
-  experimental: {
-    outputFileTracingRoot: undefined,
-  },
   typescript: {
     ignoreBuildErrors: false,
   },

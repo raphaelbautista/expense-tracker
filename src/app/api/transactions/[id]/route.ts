@@ -8,8 +8,8 @@ const containerId = process.env.COSMOS_CONTAINER_ID;
 
 // Only initialize Cosmos client if all required environment variables are present
 let client: CosmosClient | null = null;
-let database: any = null;
-let container: any = null;
+let database: ReturnType<CosmosClient['database']> | null = null;
+let container: ReturnType<ReturnType<CosmosClient['database']>['container']> | null = null;
 
 if (connectionString && databaseId && containerId) {
   try {

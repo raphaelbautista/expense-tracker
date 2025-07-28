@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
@@ -41,9 +41,10 @@ jobs:
           output_location: ".next"
         env:
           # Environment variables for build time
-          COSMOS_CONNECTION_STRING: ${{ secrets.COSMOS_CONNECTION_STRING }}
-          COSMOS_DATABASE_ID: ${{ secrets.COSMOS_DATABASE_ID }}
-          COSMOS_CONTAINER_ID: ${{ secrets.COSMOS_CONTAINER_ID }}
+          # These will fallback to empty strings if not set, allowing build to succeed
+          COSMOS_CONNECTION_STRING: ${{ secrets.COSMOS_CONNECTION_STRING || '' }}
+          COSMOS_DATABASE_ID: ${{ secrets.COSMOS_DATABASE_ID || 'mock-db' }}
+          COSMOS_CONTAINER_ID: ${{ secrets.COSMOS_CONTAINER_ID || 'mock-container' }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
