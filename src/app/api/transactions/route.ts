@@ -2,13 +2,10 @@
 import { CosmosClient } from "@azure/cosmos";
 import { NextResponse } from "next/server";
 
-// Initialize the Cosmos DB client
-const databaseId = process.env.COSMOS_DATABASE_ID || "";
-const containerId = process.env.COSMOS_CONTAINER_ID || "";
-
+// Ensure this part is updated to use the single connection string
 const client = new CosmosClient(process.env.COSMOS_CONNECTION_STRING || "");
-const database = client.database(databaseId);
-const container = database.container(containerId);
+const database = client.database(process.env.COSMOS_DATABASE_ID || "");
+const container = database.container(process.env.COSMOS_CONTAINER_ID || "");
 
 // GET: Fetch all transactions
 export async function GET() {
