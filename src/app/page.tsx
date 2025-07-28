@@ -6,7 +6,6 @@ import { Transaction } from '@/types';
 import styles from './page.module.css';
 import { motion } from 'framer-motion';
 
-// ... (Your imports for components)
 import Header from '@/components/Header';
 import CashBalanceCard from '@/components/CashBalanceCard';
 import RecentTransactionsCard from '@/components/RecentTransactionsCard';
@@ -16,7 +15,6 @@ import SpendingChartCard from '@/components/SpendingChartCard';
 // ... (Your animation variants)
 const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
 const itemVariants = { hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } };
-
 
 export default function HomePage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -36,12 +34,10 @@ export default function HomePage() {
   }, []);
 
   const { totalIncome, totalExpense, cashBalance } = useMemo(() => {
-      // ... (this calculation logic remains the same)
       const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
       const expense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
       return { totalIncome: income, totalExpense: expense, cashBalance: income - expense };
   }, [transactions]);
-
 
   const handleAddTransaction = async (data: Omit<Transaction, 'id' | 'date'>) => {
     const newTransaction = {
