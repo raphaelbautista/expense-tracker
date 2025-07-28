@@ -3,12 +3,10 @@ import { CosmosClient } from "@azure/cosmos";
 import { NextResponse } from "next/server";
 
 // Re-initialize the client here as well
-const endpoint = process.env.COSMOS_ENDPOINT || "";
-const key = process.env.COSMOS_KEY || "";
 const databaseId = process.env.COSMOS_DATABASE_ID || "";
 const containerId = process.env.COSMOS_CONTAINER_ID || "";
 
-const client = new CosmosClient({ endpoint, key });
+const client = new CosmosClient(process.env.COSMOS_CONNECTION_STRING || "");
 const database = client.database(databaseId);
 const container = database.container(containerId);
 

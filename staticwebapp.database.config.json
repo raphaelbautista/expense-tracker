@@ -1,0 +1,9 @@
+{
+  "$schema": "https://aka.ms/azure-static-web-apps-database-schema",
+  "connections": [
+    {
+      "name": "sharaph-expense-tracker",
+      "connectionStringSettingName": "COSMOS_CONNECTION_STRING"
+    }
+  ]
+}
