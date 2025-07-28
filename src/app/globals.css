@@ -1,0 +1,85 @@
+/* app/globals.css */
+:root {
+  /* Light Mode Colors - Material Style */
+  --primary-color: #6200EE;
+  --secondary-color: #03DAC6;
+  --background-color: #F5F5F5; /* Page background */
+  --card-background: #FFFFFF;    /* Card/surface background */
+  --card-border: rgba(0, 0, 0, 0.12);
+  --text-primary: #212121;
+  --text-secondary: #757575;
+  --border-color: #E0E0E0;
+  --green: #4CAF50;
+  --red: #F44336;
+  --font-body: 'Poppins', sans-serif;
+  --font-mono: 'Fira Code', monospace;
+  --list-item-background: #FAFAFA;
+}
+
+.dark {
+  /* Dark Mode Colors - Material Style */
+  --primary-color: #BB86FC;
+  --secondary-color: #03DAC6;
+  --background-color: #121212; /* Page background */
+  --card-background: #1E1E1E;    /* Card/surface background */
+  --card-border: rgba(255, 255, 255, 0.12);
+  --text-primary: #E0E0E0;
+  --text-secondary: #BDBDBD;
+  --border-color: #424242;
+  --green: #66BB6A;
+  --red: #EF5350;
+   --list-item-background: #2C2C2C;
+}
+
+.dark .shape1 {
+  background: rgba(109, 40, 217, 0.25);
+}
+.dark .shape2 {
+  background: rgba(190, 24, 93, 0.2);
+}
+
+html {
+    /* The base background color now lives on the html tag */
+    background-color: var(--background-color);
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    margin: 0;
+    overflow-x: hidden;
+
+}
+
+/* --- STYLES FOR THE BACKGROUND --- */
+.background-shapes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Place it behind everything */
+}
+.shape1, .shape2 {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(150px); /* This creates the soft, blurred look */
+}
+.shape1 {
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    left: -100px;
+    background: rgba(74, 71, 229, 0.3);
+}
+.shape2 {
+    width: 500px;
+    height: 500px;
+    bottom: -150px;
+    right: -150px;
+    background: rgba(229, 71, 139, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
