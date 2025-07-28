@@ -40,11 +40,11 @@ export default function HomePage() {
   }, [transactions]);
 
   const handleAddTransaction = async (data: Omit<Transaction, 'id' | 'date'>) => {
-    const newTransaction = {
-      ...data,
-      id: Date.now(), // Use a temporary ID for the UI
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-    };
+const newTransaction = {
+  ...data,
+  id: Date.now(),
+  date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
+};
 
     // --- POST to our API ---
     const response = await fetch('/api/transactions', {
