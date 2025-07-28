@@ -1,6 +1,6 @@
 // app/api/transactions/route.ts
 import { CosmosClient } from "@azure/cosmos";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 // Initialize Cosmos DB client
 const client = new CosmosClient(process.env.COSMOS_CONNECTION_STRING || "");
@@ -24,7 +24,7 @@ export async function GET() {
 }
 
 // POST: Add a new transaction
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const newTransaction = await request.json();
 
