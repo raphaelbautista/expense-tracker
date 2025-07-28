@@ -7,8 +7,9 @@ const container = database.container(process.env.COSMOS_CONTAINER_ID || '');
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const id = params.id;
   if (!id) {
     return NextResponse.json({ error: 'Missing id' }, { status: 400 });

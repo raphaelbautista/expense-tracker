@@ -1,4 +1,4 @@
-// app/api/transactions/route.ts
+// src/app/api/transactions/route.ts
 import { CosmosClient } from "@azure/cosmos";
 import { NextResponse } from "next/server";
 
@@ -16,6 +16,7 @@ export async function GET() {
 
     return NextResponse.json(items);
   } catch (error) {
+    console.error("Failed to fetch transactions:", error);
     return NextResponse.json(
       { error: "Failed to fetch transactions" },
       { status: 500 }
@@ -35,6 +36,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(createdItem, { status: 201 });
   } catch (error) {
+    console.error("Failed to create transaction:", error);
     return NextResponse.json(
       { error: "Failed to create transaction" },
       { status: 500 }
