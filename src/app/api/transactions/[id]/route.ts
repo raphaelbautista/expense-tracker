@@ -1,15 +1,12 @@
-// app/api/transactions/[id]/route.ts
-import { CosmosClient } from "@azure/cosmos";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
+import { CosmosClient } from '@azure/cosmos';
 
-// Initialize the client using the single connection string
 const client = new CosmosClient(process.env.COSMOS_CONNECTION_STRING || "");
 const database = client.database(process.env.COSMOS_DATABASE_ID || "");
 const container = database.container(process.env.COSMOS_CONTAINER_ID || "");
 
 export async function DELETE(
-  request: Request,
-  // This is the explicit, robust signature that Azure's build system expects
+  request: NextRequest, // ✅ Correct type here
   context: { params: { id: string } }
 ) {
   const id = context.params.id;
