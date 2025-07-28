@@ -2,18 +2,20 @@
 import { CosmosClient } from "@azure/cosmos";
 import { NextResponse } from "next/server";
 
-// Re-initialize the client here as well
-const databaseId = process.env.COSMOS_DATABASE_ID || "";
-const containerId = process.env.COSMOS_CONTAINER_ID || "";
-
+// Initialize the client
 const client = new CosmosClient(process.env.COSMOS_CONNECTION_STRING || "");
-const database = client.database(databaseId);
-const container = database.container(containerId);
+const database = client.database(process.env.COSMOS_DATABASE_ID || "");
+const container = database.container(process.env.COSMOS_CONTAINER_ID || "");
 
 // DELETE: Delete a transaction by its ID
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: Request,
+  // --- THIS IS THE CORRECTED PART ---
+  { params }: { params: { id: string } }
+) {
   const { id } = params;
   try {
+    // The partition key is the second argument for the delete operation
     await container.item(id, id).delete();
     return NextResponse.json({ message: "Transaction deleted" }, { status: 200 });
   } catch (error) {
