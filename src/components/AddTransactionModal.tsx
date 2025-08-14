@@ -1,70 +1,65 @@
-// src/components/EditTransactionModal.tsx
+// src/components/AddTransactionModal.tsx
 "use client";
 
-import { useState, FormEvent, useEffect } from 'react';
-import { Transaction } from '@/types';
-import styles from './AddTransactionModal.module.css'; // Reuse the same styles
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, FormEvent } from "react";
+import { Transaction } from "@/types";
+import styles from "./AddTransactionModal.module.css";
+import { motion, AnimatePresence } from "framer-motion";
 
-interface EditTransactionModalProps {
+interface AddTransactionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onUpdateTransaction: (transaction: Transaction) => void;
-  transaction: Transaction | null;
+  onAddTransaction: (data: Omit<Transaction, "id" | "date">) => Promise<void> | void;
+  transactionType: "income" | "expense";
 }
 
-const expenseCategories = ['Housing', 'Groceries', 'Dining Out', 'Entertainment', 'Transport', 'Utilities'];
-const incomeCategories = ['Salary'];
+const expenseCategories = ["Housing", "Groceries", "Dining Out", "Entertainment", "Transport", "Utilities"];
+const incomeCategories = ["Salary"];
 
-export default function EditTransactionModal({ 
-  isOpen, 
-  onClose, 
-  onUpdateTransaction, 
-  transaction 
-}: EditTransactionModalProps) {
-  const [description, setDescription] = useState('');
-  const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState('');
-  const [type, setType] = useState<'income' | 'expense'>('expense');
+export default function AddTransactionModal({
+  isOpen,
+  onClose,
+  onAddTransaction,
+  transactionType,
+}: AddTransactionModalProps) {
+  const [description, setDescription] = useState("");
+  const [amount, setAmount] = useState("");
+  const [type, setType] = useState<"income" | "expense">(transactionType);
+  const [category, setCategory] = useState("");
 
+  // reset form when opening or when the intended type changes
   useEffect(() => {
-    if (transaction && isOpen) {
-      setDescription(transaction.description);
-      setAmount(transaction.amount.toString());
-      setCategory(transaction.category);
-      setType(transaction.type);
+    if (isOpen) {
+      setDescription("");
+      setAmount("");
+      setType(transactionType);
+      setCategory(
+        transactionType === "expense" ? expenseCategories[0] : incomeCategories[0]
+      );
     }
-  }, [transaction, isOpen]);
+  }, [isOpen, transactionType]);
 
-  const handleSubmit = (e: FormEvent) => {
+  const categories = type === "expense" ? expenseCategories : incomeCategories;
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
-    if (
-      !description ||
-      !amount ||
-      isNaN(parseFloat(amount)) ||
-      parseFloat(amount) <= 0 ||
-      !transaction
-    ) {
-      alert('Please fill in all fields with valid values.');
+
+    const parsed = parseFloat(amount);
+    if (!description || !amount || isNaN(parsed) || parsed <= 0) {
+      alert("Please fill in all fields with valid values.");
       return;
     }
 
-    const updatedTransaction: Transaction = {
-      ...transaction,
+    const payload: Omit<Transaction, "id" | "date"> = {
       description,
-      amount: parseFloat(amount),
-      category: category as Transaction['category'],
+      amount: parsed,
+      category: category as Transaction["category"],
       type,
     };
 
-    onUpdateTransaction(updatedTransaction);
+    await onAddTransaction(payload);
     onClose();
   };
-
-  const categories = type === 'expense' ? expenseCategories : incomeCategories;
-
-  if (!transaction) return null;
 
   return (
     <AnimatePresence>
@@ -80,73 +75,77 @@ export default function EditTransactionModal({
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className={styles.modal}
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.header}>
-              <h2>Edit Transaction</h2>
-              <button onClick={onClose} className={styles.closeButton}>&times;</button>
+              <h2>Add Transaction</h2>
+              <button onClick={onClose} className={styles.closeButton} aria-label="Close">
+                &times;
+              </button>
             </div>
+
             <form onSubmit={handleSubmit} className={styles.form}>
               <div className={styles.formGroup}>
-                <label htmlFor="edit-description">Description</label>
-                <input 
-                  type="text" 
-                  id="edit-description" 
-                  value={description} 
-                  onChange={(e) => setDescription(e.target.value)} 
-                  placeholder="e.g., Coffee with friends" 
-                  required 
+                <label htmlFor="add-description">Description</label>
+                <input
+                  id="add-description"
+                  type="text"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="e.g., Coffee with friends"
+                  required
                 />
               </div>
-              
+
               <div className={styles.formGroup}>
-                <label htmlFor="edit-amount">Amount</label>
-                <input 
-                  type="number" 
-                  id="edit-amount" 
-                  value={amount} 
-                  onChange={(e) => setAmount(e.target.value)} 
-                  placeholder="0.00" 
-                  step="0.01" 
-                  min="0.01" 
-                  required 
+                <label htmlFor="add-amount">Amount</label>
+                <input
+                  id="add-amount"
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="0.00"
+                  step="0.01"
+                  min="0.01"
+                  required
                 />
               </div>
-              
+
               <div className={styles.formGroup}>
-                <label htmlFor="edit-type">Type</label>
-                <select 
-                  id="edit-type" 
-                  value={type} 
+                <label htmlFor="add-type">Type</label>
+                <select
+                  id="add-type"
+                  value={type}
                   onChange={(e) => {
-                    const newType = e.target.value as 'income' | 'expense';
+                    const newType = e.target.value as "income" | "expense";
                     setType(newType);
-                    // Reset category when type changes
-                    setCategory(newType === 'expense' ? expenseCategories[0] : incomeCategories[0]);
+                    setCategory(newType === "expense" ? expenseCategories[0] : incomeCategories[0]);
                   }}
                 >
                   <option value="expense">Expense</option>
                   <option value="income">Income</option>
                 </select>
               </div>
-              
+
               <div className={styles.formGroup}>
-                <label htmlFor="edit-category">Category</label>
-                <select 
-                  id="edit-category" 
-                  value={category} 
+                <label htmlFor="add-category">Category</label>
+                <select
+                  id="add-category"
+                  value={category}
                   onChange={(e) => setCategory(e.target.value)}
                 >
-                  {categories.map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
                   ))}
                 </select>
               </div>
-              
+
               <button type="submit" className={styles.submitButton}>
-                Update Transaction
+                Add Transaction
               </button>
             </form>
           </motion.div>
