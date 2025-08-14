@@ -1,3 +1,4 @@
+// src/app/api/transactions/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { CosmosClient } from '@azure/cosmos';
 
@@ -26,6 +27,46 @@ if (connectionString && databaseId && containerId) {
     hasDatabaseId: !!databaseId,
     hasContainerId: !!containerId
   });
+}
+
+// PUT: Update an existing transaction
+export async function PUT(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  if (!container) {
+    console.error('❌ Cosmos DB container not available');
+    return NextResponse.json(
+      { error: 'Database not configured' }, 
+      { status: 503 }
+    );
+  }
+
+  const params = await context.params;
+  const id = params.id;
+  
+  if (!id) {
+    return NextResponse.json({ error: 'Missing id' }, { status: 400 });
+  }
+  
+  try {
+    const updatedTransaction = await request.json();
+    
+    // Ensure `id` is a string and matches the URL parameter
+    updatedTransaction.id = id;
+
+    console.log('✏️ Updating transaction in Cosmos DB:', id, updatedTransaction);
+    
+    const { resource: updated } = await container
+      .item(id, id)
+      .replace(updatedTransaction);
+
+    console.log('✅ Transaction updated successfully:', id);
+    return NextResponse.json(updated, { status: 200 });
+  } catch (error) {
+    console.error('❌ Update error:', error);
+    return NextResponse.json({ error: 'Failed to update transaction' }, { status: 500 });
+  }
 }
 
 export async function DELETE(
