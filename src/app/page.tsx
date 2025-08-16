@@ -24,7 +24,9 @@ const itemVariants = {
 };
 
 export default function HomePage() {
+  // ===============================
   // State
+  // ===============================
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -33,16 +35,15 @@ export default function HomePage() {
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // ===============================
   // Fetch transactions on mount
+  // ===============================
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        console.log("🔄 Fetching transactions...");
         const res = await fetch("/api/transactions");
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
         const data = await res.json();
-        console.log("✅ Transactions fetched:", data.length, "items");
         setTransactions(data);
         setError(null);
       } catch (err) {
@@ -55,14 +56,18 @@ export default function HomePage() {
     fetchTransactions();
   }, []);
 
+  // ===============================
   // Totals
+  // ===============================
   const { totalIncome, totalExpense, cashBalance } = useMemo(() => {
     const income = transactions.filter(t => t.type === "income").reduce((sum, t) => sum + t.amount, 0);
     const expense = transactions.filter(t => t.type === "expense").reduce((sum, t) => sum + t.amount, 0);
     return { totalIncome: income, totalExpense: expense, cashBalance: income - expense };
   }, [transactions]);
 
+  // ===============================
   // Add transaction
+  // ===============================
   const handleAddTransaction = async (data: Omit<Transaction, "id" | "date">) => {
     const newTransaction = {
       ...data,
@@ -70,16 +75,13 @@ export default function HomePage() {
       date: new Date().toISOString().split("T")[0],
     };
     try {
-      console.log("💾 Adding transaction:", newTransaction);
       const res = await fetch("/api/transactions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newTransaction),
       });
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
       const created = await res.json();
-      console.log("✅ Transaction added:", created.id);
       setTransactions(prev => [created, ...prev]);
       setError(null);
     } catch (err) {
@@ -88,19 +90,18 @@ export default function HomePage() {
     }
   };
 
+  // ===============================
   // Update transaction
+  // ===============================
   const handleUpdateTransaction = async (updatedTransaction: Transaction) => {
     try {
-      console.log("✏️ Updating transaction:", updatedTransaction.id);
       const res = await fetch(`/api/transactions/${updatedTransaction.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedTransaction),
       });
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
       const updated = await res.json();
-      console.log("✅ Transaction updated:", updated.id);
       setTransactions(prev => prev.map(t => (t.id === updated.id ? updated : t)));
       setError(null);
     } catch (err) {
@@ -109,15 +110,14 @@ export default function HomePage() {
     }
   };
 
+  // ===============================
   // Delete transaction
+  // ===============================
   const handleDeleteTransaction = async (id: number) => {
     if (window.confirm("Are you sure you want to delete this transaction?")) {
       try {
-        console.log("🗑️ Deleting transaction:", id);
         const res = await fetch(`/api/transactions/${id}`, { method: "DELETE" });
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
-        console.log("✅ Transaction deleted:", id);
         setTransactions(prev => prev.filter(t => t.id !== id));
         setError(null);
       } catch (err) {
@@ -127,7 +127,9 @@ export default function HomePage() {
     }
   };
 
+  // ===============================
   // Modal handlers
+  // ===============================
   const handleOpenAddModal = (type: "income" | "expense") => {
     setModalType(type);
     setIsAddModalOpen(true);
@@ -143,11 +145,13 @@ export default function HomePage() {
     setEditingTransaction(null);
   };
 
-  // Loading
+  // ===============================
+  // Loading State
+  // ===============================
   if (isLoading) {
     return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", fontSize: "1.2rem", background: "var(--background-color)", color: "var(--text-primary)" }}>
-        <div style={{ textAlign: "center" }}>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <div style={{ textAlign: "center", color: "var(--text-primary)" }}>
           <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🔄</div>
           <div>Loading your financial data...</div>
         </div>
@@ -155,50 +159,56 @@ export default function HomePage() {
     );
   }
 
-  // Error
+  // ===============================
+  // Error State
+  // ===============================
   if (error) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center", background: "var(--background-color)", color: "var(--text-primary)", minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ background: "var(--card-background)", padding: "2rem", borderRadius: "12px", boxShadow: "0 4px 20px rgba(0,0,0,0.1)", maxWidth: "400px", width: "100%" }}>
-          <div style={{ background: "#FEE2E2", color: "#DC2626", padding: "1rem", borderRadius: "8px", marginBottom: "1.5rem", fontSize: "1.1rem" }}>
+      <div className={styles.container} style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ background: "var(--card-background)", padding: "2rem", borderRadius: "12px", boxShadow: "0 4px 20px rgba(0,0,0,0.1)", maxWidth: "400px", width: "100%", textAlign: "center" }}>
+          <div style={{ background: "#FEE2E2", color: "#DC2626", padding: "1rem", borderRadius: "8px", marginBottom: "1.5rem" }}>
             <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>❌</div>
             {error}
           </div>
-          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => window.location.reload()} style={{ padding: "0.75rem 1.5rem", background: "var(--primary-color)", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "1rem", fontWeight: "600", display: "flex", alignItems: "center", gap: "0.5rem", margin: "0 auto" }}>
+          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => window.location.reload()} style={{ padding: "0.75rem 1.5rem", background: "var(--primary-color)", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "600" }}>
             <i className="fa-solid fa-arrow-rotate-right"></i>
-            Retry Connection
+            Retry
           </motion.button>
         </motion.div>
       </div>
     );
   }
 
+  // ===============================
   // Main
+  // ===============================
   return (
     <main className={styles.container}>
-      <Header onOpenAddIncome={() => handleOpenAddModal("income")} onOpenAddExpense={() => handleOpenAddModal("expense")} />
+      <div className={styles.dashboard}>
+        {/* Header */}
+        <Header onOpenAddIncome={() => handleOpenAddModal("income")} onOpenAddExpense={() => handleOpenAddModal("expense")} />
 
-      <motion.div className={styles.dashboardGrid} variants={containerVariants} initial="hidden" animate="visible">
-        <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }}>
-          <CashBalanceCard balance={cashBalance} income={totalIncome} expense={totalExpense} />
+        {/* Dashboard Grid */}
+        <motion.div className={styles.dashboardGrid} variants={containerVariants} initial="hidden" animate="visible">
+          <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }}>
+            <CashBalanceCard balance={cashBalance} income={totalIncome} expense={totalExpense} />
+          </motion.div>
+
+          <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }}>
+            <SpendingChartCard transactions={transactions} />
+          </motion.div>
+
+          <motion.div variants={itemVariants} className={styles.fullWidthCard} whileHover={{ y: -5, scale: 1.01 }}>
+            <RecentTransactionsCard transactions={transactions} onDelete={handleDeleteTransaction} onEdit={handleOpenEditModal} />
+          </motion.div>
         </motion.div>
+      </div>
 
-        <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }}>
-          <SpendingChartCard transactions={transactions} />
-        </motion.div>
-
-        <motion.div variants={itemVariants} className={styles.fullWidthCard} whileHover={{ y: -5, scale: 1.01 }}>
-          <RecentTransactionsCard transactions={transactions} onDelete={handleDeleteTransaction} onEdit={handleOpenEditModal} />
-        </motion.div>
-      </motion.div>
-
-      {/* Add Modal */}
+      {/* Modals */}
       <AddTransactionModal isOpen={isAddModalOpen} onClose={handleCloseAddModal} onAddTransaction={handleAddTransaction} transactionType={modalType} />
-
-      {/* Edit Modal */}
       <EditTransactionModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} onUpdateTransaction={handleUpdateTransaction} transaction={editingTransaction} />
 
-      {/* Background shapes */}
+      {/* Decorative background */}
       <div className="background-shapes">
         <div className="shape1"></div>
         <div className="shape2"></div>

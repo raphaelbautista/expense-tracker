@@ -1,6 +1,8 @@
 /* src/components/Card.module.css */
 
-/* Card container */
+/* ==============================
+   Card Container
+   ============================== */
 .card {
   display: flex;
   flex-direction: column;
@@ -15,7 +17,15 @@
   grid-column: 1 / -1;
 }
 
-/* Header of the card */
+@media (max-width: 600px) {
+  .card {
+    padding: 1rem;
+  }
+}
+
+/* ==============================
+   Card Header
+   ============================== */
 .cardHeader {
   display: flex;
   justify-content: space-between;
@@ -29,48 +39,29 @@
   font-weight: 500;
 }
 
-/* ===== Recent Transactions Grid Layout ===== */
-.transactionHeader,
-.transactionItem {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr; /* Adjust widths to taste */
-  align-items: center;
-  padding: 0.75rem 1rem;
-  gap: 1rem;
-}
-
-.transactionHeader {
-  font-weight: 600;
-  border-bottom: 1px solid var(--border-color);
-  color: var(--text-secondary);
-}
-
-.transactionItem {
-  border-bottom: 1px solid var(--border-color);
-  transition: background 0.2s ease;
-}
-
-.transactionItem:hover {
-  background: rgba(0, 0, 0, 0.02);
-}
-
-/* Amount styles */
+/* ==============================
+   Amount Styles
+   ============================== */
 .amount {
   font-weight: 600;
+  font-family: var(--font-mono);
 }
 
 .positive {
   color: var(--green);
 }
 
+/* ==============================
+   Category Styles
+   ============================== */
 .category {
   font-weight: 500;
   padding: 0.25rem 0.5rem;
   border-radius: 6px;
   font-size: 0.85rem;
+  text-align: center;
 }
 
-/* Example category colors */
 .categoryHousing {
   background: rgba(98, 0, 238, 0.1);
   color: var(--primary-color);
@@ -87,36 +78,25 @@
   background: rgba(59, 130, 246, 0.1);
   color: #3b82f6;
 }
-
-/* Empty state */
-.emptyState {
-  text-align: center;
-  padding: 2rem 1rem;
-  color: var(--text-secondary);
+.categoryUtilities {
+  background: rgba(35, 169, 224, 0.1);
+  color: #23a9e0;
+}
+.categoryTransport {
+  background: rgba(229, 139, 71, 0.1);
+  color: #e58b47;
 }
 
-/* Action buttons */
+/* ==============================
+   Action Buttons
+   ============================== */
 .actionButtons {
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
 }
 
-.editBtn {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 0.875rem;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-.editBtn:hover {
-  color: var(--primary-color);
-  background-color: rgba(98, 0, 238, 0.1);
-}
-
+.editBtn,
 .deleteBtn {
   background: none;
   border: none;
@@ -127,38 +107,145 @@
   border-radius: 4px;
   transition: all 0.2s ease;
 }
+
+.editBtn:hover {
+  color: var(--primary-color);
+  background-color: rgba(98, 0, 238, 0.1);
+}
+
 .deleteBtn:hover {
   color: var(--red);
   background-color: rgba(244, 67, 54, 0.1);
 }
 
-/* Improve the empty chart state styling */
+/* ==============================
+   Empty States
+   ============================== */
+.emptyState,
 .emptyChartState {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 2.5rem 1rem;
   color: var(--text-secondary);
-  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 2px dashed var(--border-color);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--card-background) 95%, var(--background-color));
+  font-size: 0.95rem;
+}
+
+.emptyState i,
+.emptyChartState i {
+  font-size: 2rem;
+  color: var(--primary-color);
+  opacity: 0.75;
+}
+
+/* ==============================
+   Spending Chart Styles
+   ============================== */
+.balanceSubtext {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0 0 1.25rem;
 }
 
 .chartContainer {
-  height: 250px;
-  position: relative;
+  height: 260px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
-/* Dark mode improvements for pagination */
+@media (max-width: 768px) {
+  .chartContainer {
+    height: 220px;
+  }
+}
+
+/* ==============================
+   Recent Transactions Styles
+   ============================== */
+.transactionHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr; /* description wider */
+  align-items: center;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.transactionItem {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.2s ease;
+}
+
+.transactionItem:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* description */
+.transactionItem span:first-child {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* date column */
+.transactionItem span:nth-child(4) {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* responsive tweaks */
+@media (max-width: 768px) {
+  .transactionHeader {
+    display: none; /* hide table header on mobile */
+  }
+
+  .transactionItem {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .transactionItem span {
+    width: 100%;
+  }
+
+  .actionButtons {
+    justify-content: flex-start;
+    margin-top: 0.5rem;
+  }
+}
+
+/* ==============================
+   Dark Mode Pagination
+   ============================== */
 .dark .pageButton {
   background: var(--card-background);
   border-color: var(--border-color);
   color: var(--text-primary);
 }
+
 .dark .pageButton:hover:not(:disabled) {
   background: var(--primary-color);
   color: white;
   border-color: var(--primary-color);
 }
+
 .dark .pageButton.active {
   background: var(--primary-color);
   color: white;

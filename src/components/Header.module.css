@@ -1,45 +1,260 @@
-/* components/Header.module.css */
+/* src/components/Header.module.css */
+
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  padding: 0.875rem 1.25rem;
+  background: color-mix(in srgb, var(--card-background) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--card-border);
 }
+
+/* ---------- Logo ---------- */
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0; /* allow text truncation on tiny screens */
 }
-.logo h1 {
-    font-size: 1.5rem;
-    margin: 0;
-}
+
 .logo i {
-    font-size: 2rem;
+  font-size: 1.25rem;
+  color: var(--primary-color);
 }
-.btn {
-    padding: 0.75rem 1.25rem;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+
+.logo h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.btnPrimary {
-    background-color: var(--primary-color);
-    color: white;
-}
-.btnSecondary {
-    background-color: var(--secondary-color);
-    color: var(--primary-color);
-    margin-right: 1rem;
-}
+
+/* ---------- Nav ---------- */
 .nav {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Make ThemeToggle sit nicely with buttons */
+.nav :global(button),
+.nav :global([role="switch"]) {
+  /* ThemeToggle component styles pass through; this just spaces it */
+  margin-right: 0;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.55rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: var(--card-background);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, border-color 120ms ease, color 120ms ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+.btn i {
+  font-size: 1rem;
+  line-height: 0;
+}
+
+/* Primary = Add Income */
+.btnPrimary {
+  background: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--primary-color) 24%, transparent);
+}
+
+.btnPrimary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--primary-color) 30%, transparent);
+}
+
+.btnPrimary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 24%, transparent);
+}
+
+/* Secondary = Add Expense */
+.btnSecondary {
+  background: color-mix(in srgb, var(--primary-color) 10%, var(--card-background));
+  color: var(--text-primary);
+  border-color: color-mix(in srgb, var(--primary-color) 28%, var(--border-color));
+}
+
+.btnSecondary:hover {
+  background: color-mix(in srgb, var(--primary-color) 14%, var(--card-background));
+  transform: translateY(-1px);
+}
+
+.btnSecondary:active {
+  transform: translateY(0);
+}
+
+/* Focus visibility */
+.btn:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary-color) 40%, transparent);
+  outline-offset: 2px;
+}
+
+/* Disabled (future-proof) */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .logo h1 {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .header {
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .logo h1 {
+    font-size: 0.98rem;
+  }
+
+  .nav {
     gap: 0.5rem;
+  }
+
+  .btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  /* hide button text on very narrow screens, keep icons tappable */
+  .btn span,
+  .btn :where(.btnLabel) {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .logo i {
+    font-size: 1.1rem;
+  }
+  .logo h1 {
+    max-width: 48vw; /* prevent overflow on tiny screens */
+  }
+}
+/* =========================
+   Cash Balance Card Styles
+   ========================= */
+
+/* reuse .card wrapper from before */
+
+.balanceAmount {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 0.25rem 0 0.75rem;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  letter-spacing: -0.5px;
+}
+
+.balanceSubtext {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0 0 1.25rem;
+}
+
+/* income + expense summary row */
+.incomeExpenseSummary {
+  display: flex;
+  gap: 1.25rem;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex: 1 1 160px;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  background: var(--list-item-background);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.summaryItem:hover {
+  background: color-mix(in srgb, var(--primary-color) 8%, var(--list-item-background));
+  transform: translateY(-2px);
+}
+
+.summaryItem i {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* label */
+.summaryItem span {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.1rem;
+}
+
+/* value */
+.summaryItem strong {
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+/* color cues */
+.income i {
+  color: var(--green);
+}
+.expense i {
+  color: var(--red);
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  .balanceAmount {
+    font-size: 2rem;
+  }
+  .incomeExpenseSummary {
+    gap: 1rem;
+  }
+  .summaryItem {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .balanceAmount {
+    font-size: 1.75rem;
+  }
 }
