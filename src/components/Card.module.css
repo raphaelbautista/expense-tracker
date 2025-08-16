@@ -1,9 +1,21 @@
+/* src/components/Card.module.css */
 
+/* Card container */
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
 
-/* src/components/Card.module.css - Add these styles to your existing file */
+.fullWidthCard {
+  grid-column: 1 / -1;
+}
 
-/* Add these new styles to your existing Card.module.css */
-
+/* Header of the card */
 .cardHeader {
   display: flex;
   justify-content: space-between;
@@ -17,10 +29,77 @@
   font-weight: 500;
 }
 
+/* ===== Recent Transactions Grid Layout ===== */
+.transactionHeader,
+.transactionItem {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr; /* Adjust widths to taste */
+  align-items: center;
+  padding: 0.75rem 1rem;
+  gap: 1rem;
+}
+
+.transactionHeader {
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.transactionItem {
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.2s ease;
+}
+
+.transactionItem:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* Amount styles */
+.amount {
+  font-weight: 600;
+}
+
+.positive {
+  color: var(--green);
+}
+
+.category {
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+/* Example category colors */
+.categoryHousing {
+  background: rgba(98, 0, 238, 0.1);
+  color: var(--primary-color);
+}
+.categoryGroceries {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--green);
+}
+.categoryDining {
+  background: rgba(236, 72, 153, 0.1);
+  color: #ec4899;
+}
+.categoryEntertainment {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+/* Empty state */
+.emptyState {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-secondary);
+}
+
+/* Action buttons */
 .actionButtons {
   display: flex;
   gap: 0.5rem;
-  align-items: center;
+  justify-content: flex-end;
 }
 
 .editBtn {
@@ -33,7 +112,6 @@
   border-radius: 4px;
   transition: all 0.2s ease;
 }
-
 .editBtn:hover {
   color: var(--primary-color);
   background-color: rgba(98, 0, 238, 0.1);
@@ -49,7 +127,6 @@
   border-radius: 4px;
   transition: all 0.2s ease;
 }
-
 .deleteBtn:hover {
   color: var(--red);
   background-color: rgba(244, 67, 54, 0.1);
@@ -77,13 +154,11 @@
   border-color: var(--border-color);
   color: var(--text-primary);
 }
-
 .dark .pageButton:hover:not(:disabled) {
   background: var(--primary-color);
   color: white;
   border-color: var(--primary-color);
 }
-
 .dark .pageButton.active {
   background: var(--primary-color);
   color: white;
